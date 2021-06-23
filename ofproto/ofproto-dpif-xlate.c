@@ -7169,6 +7169,12 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
         }
     }
+	/* After SET_ETH action is executed, the source and destination mac address of same flow 
+	   should be different. */
+    if (eth_addr_to_uint64(flow->dl_src) == eth_addr_to_uint64(flow->dl_dst)) {
+        VLOG_ERR("The source and destination mac address of same flow should be different.");
+        ctx->error = XLATE_FORWARDING_DISABLED;
+    }
 }
 
 void
